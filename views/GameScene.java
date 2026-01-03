@@ -12,7 +12,7 @@ public class GameScene extends JPanel {
     //ゲームシーン
     //時間切れor提出ボタンで遷移
     //センター文字を表示するclass
-    private ArrayList<Cards> cards, judge;
+    private ArrayList<CardView> cards, judge;
 
     private JPanel judgeArea;
 
@@ -21,36 +21,50 @@ public class GameScene extends JPanel {
         this.setLayout(null);
         this.setBackground(Color.WHITE);//背景設定。画像を使うならここを改変
 
-        cards = new ArrayList();
-        judge = new ArrayList();
+        cards = new ArrayList();//手札リスト
+        judge = new ArrayList();//判定リスト
 
         judgeArea = new JPanel();//判定枠の作成
-        judgeArea.setBounds(120, 256, 720, 128);
+        judgeArea.setBounds(120, 256, 720, 60);
         judgeArea.setBackground(Color.DARK_GRAY);
         this.add(judgeArea);
 
+        showLabel = new JLabel("中身");
+        showLabel.setBounds(120, 120, 720, 64);
+        this.add(showLabel);
+
+        setSize(960, 640);
+    }
+
+    public void GetCards(ArrayList<String> a){//文字列のリストからカードリストを作成、表示する関数
         DragAdapter adp = new DragAdapter();//ドラッグ＆ドロップ機能クラス作成
-        for(int i=0; i < 13; i++){//各カードに上記の機能付与。Controllerから与えられるcardsに付与するよう改変予定
-            Cards c = new Cards("abcdefghijklmn"+i, 20+60*i,500);
+        for(int i=0; i < 12; i++){
+            CardView c = new CardView(a.get(i), 20+60*i, 500);
             c.addMouseListener(adp);
             c.addMouseMotionListener(adp);
             cards.add(c);
         }
+
+        for(int i=0; i < 12; i++){
+            this.add(cards.get(i));
+        }
     }
 
-    public String printList(ArrayList<Cards> a){
+    public String getList(ArrayList<CardView> a){//リスト内の文字列を全て繋げて返す
         String rets = "";
         for(int i=0; i < a.size(); i++){
             String s = a.get(i).info.getWord();
-            rets +=" " + s;
+            rets += s;
         }
         return rets;
     }
 
-    class Cards extends JLabel{
+    public
+
+    class CardView extends JLabel{
         public CardInfo info;
         public Point lastp, initp;
-        public Cards(String word, int x, int y){
+        public CardView(String word, int x, int y){
             info = new CardInfo(word, x, y);
 
             this.lastp = new Point(x, y); 
@@ -87,17 +101,16 @@ public class GameScene extends JPanel {
 
         @Override
         public void mouseReleased(MouseEvent e){
-            Cards card = (Cards)e.getComponent();
+            CardView card = (CardView)e.getComponent();
             Rectangle cardRect = card.getBounds();
             Rectangle judgeRect = judgeArea.getBounds();
 
             if(cardRect.intersects(judgeRect)){
                 card.lastp.y = 256;
-                card.lastp.x = card.getX();
+                card.lastp.x = card.getX(); card.info.lastp.x = card.lastp.x;
                 if(!judge.contains(card)){
                     judge.add(card);
                 }
-                
             }else{
                 card.lastp.x = card.initp.x;
                 card.lastp.y = card.initp.y;
@@ -105,10 +118,10 @@ public class GameScene extends JPanel {
                     judge.remove(judge.indexOf(card));
                 }
             }
-            showLabel.setText(printList(judge));
+            showLabel.setText(getList(judge));
             card.setLocation(card.lastp);
             ClickPoint = null;
-        }//手札は初期7枚+ランダム6枚の13枚
+        }//手札は初期6枚+ランダム6枚の12枚
 
     }
 }

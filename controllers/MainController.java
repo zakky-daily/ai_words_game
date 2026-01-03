@@ -9,5 +9,7 @@ public class MainController {
 
         // とりあえず今は、いきなりゲーム開始とする
         mainFrame.startGame();
+
+        mainFrame.setVisible(true);
     }
 }
