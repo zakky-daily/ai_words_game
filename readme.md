@@ -10,9 +10,7 @@
 
 **↓は毎回やる**
 
-3. `javac -d bin $(find . -name '*.java')` (必ずこれにすること!!)
-
-4. `java Main`
+3. `javac -d bin $(find . -name '*.java') && java Main` (必ずこれにすること!!)
 
 ## 実行方法(Windows)
 

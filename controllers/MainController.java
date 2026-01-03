@@ -6,10 +6,8 @@ public class MainController {
 
         // フレームの生成
         MainFrame mainFrame = new MainFrame();
-
+        
         // とりあえず今は、いきなりゲーム開始とする
-        mainFrame.startGame();
-
-        mainFrame.setVisible(true);
+        new GameController(mainFrame);
     }
 }
