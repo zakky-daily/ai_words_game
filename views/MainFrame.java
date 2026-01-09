@@ -10,6 +10,11 @@ public class MainFrame extends JFrame {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);//xボタンで終了
     }
 
+    public void startTitle() {
+        TitleScene titleScene = new TitleScene();
+        this.add(titleScene);
+    }
+
     public void startGame() {
         GameScene gamescene = new GameScene();
         this.add(gamescene);

@@ -21,8 +21,8 @@ public class GameScene extends JPanel {
         this.setLayout(null);
         this.setBackground(Color.WHITE);//背景設定。画像を使うならここを改変
 
-        cards = new ArrayList();//手札リスト
-        judge = new ArrayList();//判定リスト
+        cards = new ArrayList<CardView>();//手札リスト
+        judge = new ArrayList<CardView>();//判定リスト
 
         judgeArea = new JPanel();//判定枠の作成
         judgeArea.setBounds(120, 256, 720, 60);
