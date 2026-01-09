@@ -1,5 +1,5 @@
 package controllers;
-import views.MainFrame;
+import views.*;//←この書き方で別ディレクトリのファイル全部使える。
 
 public class MainController {
     public MainController() {
