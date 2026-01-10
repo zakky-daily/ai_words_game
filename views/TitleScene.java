@@ -17,31 +17,42 @@ public class TitleScene extends JPanel {
         this.setBackground(Color.WHITE);
         
         // ボタンの追加
-        Font buttonFont = new Font("SansSerif", Font.BOLD, 30);
-        URL imageStart = getClass().getResource("/views/title.png");
-        URL imageToPlay = getClass().getResource("/views/title.png");
-        ImageIcon iconStart = new ImageIcon(imageStart);
-        ImageIcon iconToPlay = new ImageIcon(imageToPlay);
-        // 元の画像サイズが大きすぎる場合、ここでリサイズ
-        Image imgSrtart = iconStart.getImage().getScaledInstance(230, 80, Image.SCALE_SMOOTH);
-        Image imgToPlay = iconToPlay.getImage().getScaledInstance(230, 80, Image.SCALE_SMOOTH);
-
         // スタートボタンを追加
-        startButton = new JButton();
+        URL imageStart = getClass().getResource("/views/start.png");
+        if (imageStart != null) {
+            ImageIcon iconStart = new ImageIcon(imageStart);
+            // ボタンのサイズ(230, 80)に合わせてリサイズ
+            Image imgStart = iconStart.getImage().getScaledInstance(230, 80, Image.SCALE_SMOOTH);
+            startButton = new JButton(new ImageIcon(imgStart));
+        } else {
+            startButton = new JButton("START");
+        }
+
         startButton.setBounds(375, 420, 230, 80);
-        startButton.setBackground(new Color(40, 40, 80)); // 濃紺
-        startButton.setForeground(Color.BLACK);
-        startButton.setIcon(iconStart);
-        startButton.setFocusPainted(false);
-        this.add(startButton);
+        // ボタンの装飾を消して画像だけ見せる設定
+        startButton.setContentAreaFilled(false); // 背景を透明に
+        startButton.setBorderPainted(false);     // 枠線を消す
+        startButton.setFocusPainted(false);      // クリック時の枠を消す
         
+        this.add(startButton);
+    
 
         // 遊び方ボタンを追加
-        wayToPlayButton = new JButton("遊び方");
+        URL imageToPlay = getClass().getResource("/views/howtoplay.png");
+        if (imageToPlay != null) {
+            ImageIcon iconToPlay = new ImageIcon(imageToPlay);
+            // 同じく (230, 80) にリサイズ
+            Image imgResized = iconToPlay.getImage().getScaledInstance(230, 80, Image.SCALE_SMOOTH);
+            wayToPlayButton = new JButton(new ImageIcon(imgResized));
+        } else {
+            wayToPlayButton = new JButton("HOW TO PLAY");
+        }
+
         wayToPlayButton.setBounds(375, 540, 230, 80);
-        wayToPlayButton.setForeground(Color.BLACK);
+        wayToPlayButton.setContentAreaFilled(false);
+        wayToPlayButton.setBorderPainted(false);
         wayToPlayButton.setFocusPainted(false);
-        startButton.setIcon(iconToPlay);
+        
         this.add(wayToPlayButton);
 
         // 背景画像を用意
@@ -57,7 +68,5 @@ public class TitleScene extends JPanel {
         }   
         titleLabel.setBounds(0, 0, 980, 700);
         this.add(titleLabel);
-
-
     }
 }
