@@ -18,7 +18,7 @@ public class TitleScene extends JPanel {
         
         // ボタンの追加
         // スタートボタンを追加
-        URL imageStart = getClass().getResource("/start.png");
+        URL imageStart = getClass().getResource("/Title/start.png");
         if (imageStart != null) {
             ImageIcon iconStart = new ImageIcon(imageStart);
             // ボタンのサイズ(230, 80)に合わせてリサイズ
@@ -35,12 +35,13 @@ public class TitleScene extends JPanel {
     
 
         // 遊び方ボタンを追加
-        URL imageToPlay = getClass().getResource("/howtoplay.png");
+        URL imageToPlay = getClass().getResource("/Title/howtoplay.png");
         if (imageToPlay != null) {
             ImageIcon iconToPlay = new ImageIcon(imageToPlay);
             // 同じく (230, 80) にリサイズ
             Image imgResized = iconToPlay.getImage().getScaledInstance(230, 80, Image.SCALE_SMOOTH);
             wayToPlayButton = new JButton(new ImageIcon(imgResized));
+            wayToPlayButton.setActionCommand("HOW_TO_PLAY");
             wayToPlayButton.setContentAreaFilled(false);
             wayToPlayButton.setBorderPainted(false);
             wayToPlayButton.setFocusPainted(false);
@@ -50,10 +51,10 @@ public class TitleScene extends JPanel {
 
         wayToPlayButton.setBounds(375, 540, 230, 80);
         this.add(wayToPlayButton);
-        
+
 
         // 背景画像を用意
-        URL image = getClass().getResource("/title.png");
+        URL image = getClass().getResource("/Title/title.png");
         if (image != null) {
             ImageIcon icon = new ImageIcon(image);
             // 元の画像サイズが大きすぎる場合、ここでリサイズ
@@ -65,5 +66,9 @@ public class TitleScene extends JPanel {
         }   
         titleLabel.setBounds(0, 0, 980, 700);
         this.add(titleLabel);
+    }
+
+    public void setStartButtonListener(ActionListener listener){
+        startButton.addActionListener(listener);
     }
 }

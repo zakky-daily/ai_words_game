@@ -1,5 +1,6 @@
 package controllers;
 import views.MainFrame;
+import views.TitleScene;
 
 public class MainController {
     public MainController() {
