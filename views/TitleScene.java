@@ -38,7 +38,7 @@ public class TitleScene extends JPanel {
     
 
         // 遊び方ボタンを追加
-        URL imageToPlay = getClass().getResource("/views/howtoplay.png");
+        URL imageToPlay = getClass().getResource("/res/howtoplay.png");
         if (imageToPlay != null) {
             ImageIcon iconToPlay = new ImageIcon(imageToPlay);
             // 同じく (230, 80) にリサイズ
@@ -56,7 +56,7 @@ public class TitleScene extends JPanel {
         this.add(wayToPlayButton);
 
         // 背景画像を用意
-        URL image = getClass().getResource("/views/title.png");
+        URL image = getClass().getResource("/res/title.png");
         if (image != null) {
             ImageIcon icon = new ImageIcon(image);
             // 元の画像サイズが大きすぎる場合、ここでリサイズ
