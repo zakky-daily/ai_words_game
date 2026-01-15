@@ -24,6 +24,7 @@ public class TitleScene extends JPanel {
             // ボタンのサイズ(230, 80)に合わせてリサイズ
             Image imgStart = iconStart.getImage().getScaledInstance(230, 80, Image.SCALE_SMOOTH);
             startButton = new JButton(new ImageIcon(imgStart));
+            startButton.setActionCommand("START");
             startButton.setContentAreaFilled(false); // 背景を透明に
             startButton.setBorderPainted(false);     // 枠線を消す
             startButton.setFocusPainted(false);      // クリック時の枠を消す
@@ -68,7 +69,26 @@ public class TitleScene extends JPanel {
         this.add(titleLabel);
     }
 
+    private void showDialog(JFrame mainFrame){
+        // manual.pngの読み込み
+        URL manualURL = getClass().getResource("/Title/manual.png");
+        if(manualURL != null){
+            ImageIcon manualIcon = new ImageIcon(manualURL);
+            // 必要に応じてリサイズ（例: 800x500）
+            Image img = manualIcon.getImage().getScaledInstance(800, 500, Image.SCALE_SMOOTH);
+            // 遊び方ダイアログとして画像を載せる
+            JOptionPane.showMessageDialog(mainFrame, 
+                new JLabel(new ImageIcon(img)), "遊び方",JOptionPane.PLAIN_MESSAGE
+            );
+        } else {
+            JOptionPane.showMessageDialog(mainFrame, "遊び方画像が見つかりません。");
+        }
+    }
+    
+
     public void setStartButtonListener(ActionListener listener){
         startButton.addActionListener(listener);
+        wayToPlayButton.addActionListener(listener);
     }
+
 }
