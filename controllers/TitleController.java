@@ -63,7 +63,9 @@ public class TitleController{
             // 必要に応じてリサイズ（例: 800x500）
             Image img = manualIcon.getImage().getScaledInstance(800, 500, Image.SCALE_SMOOTH);
             // 遊び方ダイアログとして画像を載せる
-            JOptionPane.showMessageDialog(mainFrame, img);
+            JOptionPane.showMessageDialog(mainFrame, 
+                new JLabel(new ImageIcon(img)), "遊び方",JOptionPane.PLAIN_MESSAGE
+            );
         } else {
             JOptionPane.showMessageDialog(mainFrame, "遊び方画像が見つかりません。");
         }
