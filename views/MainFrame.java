@@ -9,9 +9,11 @@ public class MainFrame extends JFrame {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);//xボタンで終了
     }
 
-    public void startTitle() {
+    // 戻り値をTitleSceneに変更
+    public TitleScene startTitle() {
         TitleScene titleScene = new TitleScene();
         this.add(titleScene);
+        return titleScene;
     }
 
     public void startGame() {//gamescene作って表示
