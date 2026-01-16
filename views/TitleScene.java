@@ -1,9 +1,8 @@
 package views;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.*;
-import javax.swing.*;
 import java.net.URL;
+import javax.swing.*;
 
 public class TitleScene extends JPanel {
     private JLabel titleLabel;
@@ -69,7 +68,7 @@ public class TitleScene extends JPanel {
         this.add(titleLabel);
     }
 
-    private void showDialog(JFrame mainFrame){
+    public void showDialog(JFrame mainFrame){
         // manual.pngの読み込み
         URL manualURL = getClass().getResource("/Title/manual.png");
         if(manualURL != null){

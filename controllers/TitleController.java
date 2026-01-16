@@ -1,11 +1,7 @@
 package controllers;
 
-import java.awt.Component;
-import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.net.URL;
-import javax.swing.*;
 import views.MainFrame;
 import views.TitleScene;
 
@@ -28,7 +24,7 @@ public class TitleController{
                     mainFrame.revalidate();
                     mainFrame.repaint();
                 } else if(e.getActionCommand().equals("HOW_TO_PLAY")){
-                    showDialog(mainFrame);
+                    titleScene.showDialog(mainFrame);
                 }
             }
         });
