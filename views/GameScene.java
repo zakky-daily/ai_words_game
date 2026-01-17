@@ -47,7 +47,8 @@ public class GameScene extends JPanel {
     }
 
     public void GetCards(ArrayList<String> a, GameController controller){//文字列のリストからカードリストを作成、表示する関数
-        for(int i=0; i < 12; i++){
+        int count = Math.min(12, a.size());
+        for(int i=0; i < count; i++){
             CardView c = new CardView(a.get(i), 20+60*i, 500);//カードの配置はここの座標を変更
             c.addMouseListener(controller);//GameControllerで用意したListenerをここで適用
             c.addMouseMotionListener(controller);
@@ -71,6 +72,10 @@ public class GameScene extends JPanel {
         if(judge.contains(card)){
             judge.remove(card);
         }
+    }
+
+    public ArrayList<CardView> getJudgeCards(){//Controller側で文章生成に使う
+        return new ArrayList<>(judge);
     }
 
     public void addSubmitListener(ActionListener listener){//ボタンにlistenerを付与

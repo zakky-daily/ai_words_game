@@ -1,38 +1,40 @@
 package controllers;
-import java.io.IOException;
-import java.lang.reflect.Type;
-import java.nio.file.Files;
-import java.nio.file.Path;
+
+import java.awt.Component;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
 import lib.CardInfo;
-import views.*;
+import models.GameModel;
+import views.CardView;
+import views.GameScene;
+import views.MainFrame;
 
 //!!!Modelの関数がないうちは文章反映できません!!!
 
 public class GameController extends MouseAdapter implements ActionListener{
 private MainFrame mainFrame;//viewやmodelなどの関数呼び出し用
 private Point clickPoint; //mousePresed時の座標記憶先
+private final GameModel model;
+private final int themeId;
+private final String themeKey;
 
     public GameController(MainFrame mainFrame) {
         this.mainFrame = mainFrame;
+        this.model = new GameModel();
         mainFrame.startGame();
         mainFrame.setVisible(true);
-        ArrayList<String> l = new ArrayList<>();//GetCards検証用
-        for (int i = 0; i < 12; i++) {
-            l.add(i + "");            
-        }
-        this.mainFrame.gameScene.GetCards(l, this);//thisがMouseAdapter
+        this.themeId = model.pickRandomThemeId();
+        this.themeKey = model.getThemeKey(themeId);
+        ArrayList<String> cards = model.buildCardSet(themeKey);
+        this.mainFrame.gameScene.GetCards(cards, this);//thisがMouseAdapter
         this.mainFrame.gameScene.addSubmitListener(this);//提出ボタンにListenerを付与
     }
     
@@ -65,14 +67,18 @@ private Point clickPoint; //mousePresed時の座標記憶先
             if(cardRect.intersects(judgeRect)){ //判定枠と重なっていた場合
                 card.lastp.y = 256; //y座標固定
                 card.lastp.x = card.getX(); card.info.lastp.x = card.lastp.x; //x座標をReleased時の値に更新
+                card.info.lastp.y = card.lastp.y;
                 mainFrame.gameScene.addCardtoJudge(card);//view側でArrayListに追加
             }else{
                 card.lastp.x = card.initp.x;//元の位置に戻す。Modelでやりたい。
                 card.lastp.y = card.initp.y;
+                card.info.lastp.x = card.lastp.x;
+                card.info.lastp.y = card.lastp.y;
                 mainFrame.gameScene.removeCard(card);//view側でArrayListから削除
+                card.setText(card.info.word);
             }
             
-            mainFrame.gameScene.updateLabel(1, "t");//画面上の文章を更新。いまはどんな動作をしてもtが表示される。"t"を更新した文字列の入った変数に変更。
+            updateJudgeSentence();//画面上の文章とカード表示を更新
             card.setLocation(card.lastp);//余裕があればViewに同機能の関数作ってそれを呼び出しに変更
             clickPoint = null;
         }//MouseAdapterの再定義完了
@@ -84,31 +90,29 @@ private Point clickPoint; //mousePresed時の座標記憶先
             }
         }
 
-
-    public String GenerateSentence(ArrayList<CardInfo> cards) {
-        cards.sort(Comparator.comparingInt(c -> c.lastp.x));
-        String res = "";
-        for (CardInfo c : cards) res += c.word;
-        return res;
-    }
-
-    public ArrayList<String> DecideWords(String theme) {
-        try {
-            String json = Files.readString(Path.of( "models", "card_list.json"));
-            Type type = new TypeToken<Map<String, List<String>>>() {}.getType();
-            Map<String, List<String>> map = new Gson().fromJson(json, type);
-
-            ArrayList<String> res = new ArrayList<>();
-            res.addAll(map.get(theme + "_common"));
-
-            ArrayList<String> pool = new ArrayList<>(map.get(theme + "_random"));
-            Collections.shuffle(pool);
-            res.addAll(pool.subList(0, Math.min(6, pool.size())));
-
-            return res;
-        } catch (IOException e) {
-            System.err.println("card_list.jsonが読み込めませんでした");
-            return null;
+    private void updateJudgeSentence() {
+        ArrayList<CardView> judgeCards = mainFrame.gameScene.getJudgeCards();
+        if (judgeCards.isEmpty()) {
+            mainFrame.gameScene.updateLabel(GameScene.LABEL_ID, "");
+            return;
         }
+
+        ArrayList<CardInfo> infos = new ArrayList<>(judgeCards.size());
+        for (CardView card : judgeCards) {
+            infos.add(card.info);
+        }
+
+        ArrayList<String> trimmedWords = model.applyOverlapByPosition(infos, GameModel.CARD_WIDTH);
+        List<CardView> sortedCards = new ArrayList<>(judgeCards);
+        sortedCards.sort(Comparator.comparingInt(c -> c.info.lastp.x));
+        for (int i = 0; i < sortedCards.size() && i < trimmedWords.size(); i++) {
+            sortedCards.get(i).setText(trimmedWords.get(i));
+        }
+
+        StringBuilder sentence = new StringBuilder();
+        for (String word : trimmedWords) {
+            sentence.append(word);
+        }
+        mainFrame.gameScene.updateLabel(GameScene.LABEL_ID, sentence.toString());
     }
 }

@@ -2,13 +2,16 @@ package controllers;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import models.TitleModel;
 import views.MainFrame;
 import views.TitleScene;
 
 
 public class TitleController{
+    private final TitleModel model;
     
     public TitleController(MainFrame mainFrame) {
+        this.model = new TitleModel();
         // TitleSceneを取得
         TitleScene titleScene = mainFrame.startTitle();
 
@@ -17,13 +20,14 @@ public class TitleController{
         titleScene.setStartButtonListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e){
-                if(e.getActionCommand().equals("START")){
+                TitleModel.TitleAction action = model.getAction(e.getActionCommand());
+                if(action == TitleModel.TitleAction.START){
                     System.out.println("はじめるボタンが押されました");
                     mainFrame.getContentPane().removeAll();
                     mainFrame.startGame();
                     mainFrame.revalidate();
                     mainFrame.repaint();
-                } else if(e.getActionCommand().equals("HOW_TO_PLAY")){
+                } else if(action == TitleModel.TitleAction.HOW_TO_PLAY){
                     titleScene.showDialog(mainFrame);
                 }
             }
