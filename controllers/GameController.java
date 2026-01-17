@@ -34,7 +34,7 @@ public class GameController extends MouseAdapter implements ActionListener{
         for (int i = 0; i < 12; i++) {
             l.add(i + "");            
         }
-        this.mainFrame.gameScene.GetCards(l, this);//thisがMouseAdapter
+        this.mainFrame.gameScene.GenerateCards(l, this);//thisがMouseAdapter
         this.mainFrame.gameScene.addSubmitListener(this);//提出ボタンにListenerを付与
     }
     

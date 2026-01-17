@@ -46,7 +46,7 @@ public class GameScene extends JPanel {
         setSize(960, 640);//サイズ
     }
 
-    public void GetCards(ArrayList<String> a, GameController controller){//文字列のリストからカードリストを作成、表示する関数
+    public void GenerateCards(ArrayList<String> a, GameController controller){//文字列のリストからカードリストを作成、表示する関数
         for(int i=0; i < 12; i++){
             CardView c = new CardView(a.get(i), 20+60*i, 500);//カードの配置はここの座標を変更
             c.addMouseListener(controller);//GameControllerで用意したListenerをここで適用
@@ -80,12 +80,14 @@ public class GameScene extends JPanel {
         switch (id) {
             case LABEL_ID://1
                 showLabel.setText(t);
+                showLabel.repaint();
                 break;
             case TIMER_ID://2
                 showtimer.setText(t);
             default:
                 throw new AssertionError();
         }
+
 
     }
 

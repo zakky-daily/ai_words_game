@@ -15,13 +15,18 @@ public class MainController {
         // new GameController(mainFrame);
     }
 
+    public void changeScene(MainFrame m){
+        m.revalidate();
+        m.repaint();
+    }
+
     public void startTitle(){
+        mainFrame.getContentPane().removeAll();
         TitleController titleCtrl = new TitleController(this);
-        mainFrame.startTitle();
     }
 
     public void startGame(){
+        mainFrame.getContentPane().removeAll();
         GameController gameCtrl = new GameController(this);
-        mainFrame.startGame();
     }
 }
