@@ -1,4 +1,4 @@
-import controllers.MainController;
+import controllers.*;
 
 class Main {
     public static void main(String[] args) {

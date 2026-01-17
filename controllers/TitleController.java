@@ -7,9 +7,12 @@ import views.TitleScene;
 
 
 public class TitleController{
-    
-    public TitleController(MainFrame mainFrame) {
+    private MainController mainCtrl;
+    private MainFrame mainFrame;
+    public TitleController(MainController mc) {
         // TitleSceneを取得
+        this.mainCtrl = mc;
+        this.mainFrame = mc.mainFrame;
         TitleScene titleScene = mainFrame.startTitle();
 
         // TitleSceneにあるボタンにActionListenerを登録
@@ -19,10 +22,12 @@ public class TitleController{
             public void actionPerformed(ActionEvent e){
                 if(e.getActionCommand().equals("START")){
                     System.out.println("はじめるボタンが押されました");
-                    mainFrame.getContentPane().removeAll();
+                    mainCtrl.startGame();
+                    
+                    /*mainFrame.getContentPane().removeAll();
                     mainFrame.startGame();
                     mainFrame.revalidate();
-                    mainFrame.repaint();
+                    mainFrame.repaint();*/
                 } else if(e.getActionCommand().equals("HOW_TO_PLAY")){
                     titleScene.showDialog(mainFrame);
                 }

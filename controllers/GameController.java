@@ -21,11 +21,13 @@ import views.*;
 //!!!Modelの関数がないうちは文章反映できません!!!
 
 public class GameController extends MouseAdapter implements ActionListener{
-private MainFrame mainFrame;//viewやmodelなどの関数呼び出し用
-private Point clickPoint; //mousePresed時の座標記憶先
+    private MainController mainCtrl;
+    private MainFrame mainFrame;//viewやmodelなどの関数呼び出し用
+    private Point clickPoint; //mousePresed時の座標記憶先
 
-    public GameController(MainFrame mainFrame) {
-        this.mainFrame = mainFrame;
+    public GameController(MainController mc) {
+        this.mainCtrl = mc;
+        this.mainFrame = mc.mainFrame;
         mainFrame.startGame();
         mainFrame.setVisible(true);
         ArrayList<String> l = new ArrayList<>();//GetCards検証用
