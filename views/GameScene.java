@@ -73,6 +73,10 @@ public class GameScene extends JPanel {
         }
     }
 
+    public ArrayList<CardView> getJudgeCards(){//Controller側で文章生成に使う
+        return new ArrayList<>(judge);
+    }
+
     public void addSubmitListener(ActionListener listener){//ボタンにlistenerを付与
         submitButton.addActionListener(listener);//GameControllerで用意したListenerをここで適用
     }
