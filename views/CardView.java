@@ -12,10 +12,12 @@ import lib.CardInfo;
             this.lastp = new Point(x, y); 
             this.initp = new Point(x, y);
             setText(word);
+
+            this.setFont(new Font(Font.MONOSPACED, Font.BOLD, 15));
             setOpaque(true);
             setBackground(Color.white);
             setHorizontalAlignment(CENTER);
-            setBounds(x, y, 80, 60);
+            setBounds(x, y, 135, 70);
             setBorder(BorderFactory.createLineBorder(Color.BLACK));
         }
     }
