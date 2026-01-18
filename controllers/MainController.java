@@ -1,5 +1,5 @@
 package controllers;
-import views.*;//←この書き方で別ディレクトリのファイル全部使える。
+import views.*;
 
 public class MainController {
     public MainFrame mainFrame;
@@ -21,12 +21,14 @@ public class MainController {
     }
 
     public void startTitle(){
-        mainFrame.getContentPane().removeAll();
         TitleController titleCtrl = new TitleController(this);
     }
 
     public void startGame(){
-        mainFrame.getContentPane().removeAll();
         GameController gameCtrl = new GameController(this);
+    }
+
+    public void startJudge(){
+        JudgeController judgeCtrl = new JudgeController(this);
     }
 }
