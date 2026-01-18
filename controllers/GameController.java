@@ -10,7 +10,6 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-
 import lib.CardInfo;
 import models.GameModel;
 import views.CardView;
@@ -21,6 +20,7 @@ import views.MainFrame;
 
 public class GameController extends MouseAdapter implements ActionListener{
     private MainController mainCtrl;
+    private GameScene view;
     private MainFrame mainFrame;//viewやmodelなどの関数呼び出し用
     private Point clickPoint; //mousePresed時の座標記憶先
 private final GameModel model;
@@ -31,13 +31,12 @@ private final String themeKey;
         this.mainCtrl = mc;
         this.mainFrame = mc.mainFrame;
         this.model = new GameModel();
-        mainFrame.startGame();
-        mainFrame.setVisible(true);
+        this.view = mainFrame.startGame();
         this.themeId = model.pickRandomThemeId();
         this.themeKey = model.getThemeKey(themeId);
         ArrayList<String> cards = model.buildCardSet(themeKey);
-        this.mainFrame.gameScene.GenerateCards(cards, this);//thisがMouseAdapter
-        this.mainFrame.gameScene.addSubmitListener(this);//提出ボタンにListenerを付与
+        view.GenerateCards(cards, this);//thisがMouseAdapter
+        view.addSubmitListener(this);//提出ボタンにListenerを付与
     }
     
     @Override   //MouseAdapterの再定義開始
@@ -64,20 +63,17 @@ private final String themeKey;
 
             //カードが枠内にあるかの判定をするため、四角形のクラスでカード、判定枠を記憶
             Rectangle cardRect = card.getBounds();
-            Rectangle judgeRect = mainFrame.gameScene.getJudgeAreaBounds();
+            Rectangle judgeRect = view.getJudgeAreaBounds();
 
             if(cardRect.intersects(judgeRect)){ //判定枠と重なっていた場合
                 card.lastp.y = 256; //y座標固定
                 card.lastp.x = card.getX(); card.info.lastp.x = card.lastp.x; //x座標をReleased時の値に更新
                 card.info.lastp.y = card.lastp.y;
-                mainFrame.gameScene.addCardtoJudge(card);//view側でArrayListに追加
+                view.addCardtoJudge(card);//view側でArrayListに追加
             }else{
                 card.lastp.x = card.initp.x;//元の位置に戻す。Modelでやりたい。
                 card.lastp.y = card.initp.y;
-                card.info.lastp.x = card.lastp.x;
-                card.info.lastp.y = card.lastp.y;
-                mainFrame.gameScene.removeCard(card);//view側でArrayListから削除
-                card.setText(card.info.word);
+                view.removeCard(card);//view側でArrayListから削除
             }
             
             updateJudgeSentence();//画面上の文章とカード表示を更新
@@ -88,14 +84,15 @@ private final String themeKey;
         @Override
         public void actionPerformed(ActionEvent e){//提出ボタン用
             if(e.getActionCommand().equals("提出")){
-                mainFrame.gameScene.updateLabel(1, "test");//この中身は提出後の動作全般。処理は""絶対に""それぞれ別で関数に書くこと。ここでは呼び出しがメイン
+                mainCtrl.startJudge();
+                //view.updateLabel(1, "test");//この中身は提出後の動作全般。処理は""絶対に""それぞれ別で関数に書くこと。ここでは呼び出しがメイン
             }
         }
 
     private void updateJudgeSentence() {
-        ArrayList<CardView> judgeCards = mainFrame.gameScene.getJudgeCards();
+        ArrayList<CardView> judgeCards = view.getJudgeCards();
         if (judgeCards.isEmpty()) {
-            mainFrame.gameScene.updateLabel(GameScene.LABEL_ID, "");
+            view.updateLabel(GameScene.LABEL_ID, "");
             return;
         }
 
@@ -115,6 +112,6 @@ private final String themeKey;
         for (String word : trimmedWords) {
             sentence.append(word);
         }
-        mainFrame.gameScene.updateLabel(GameScene.LABEL_ID, sentence.toString());
+        view.updateLabel(GameScene.LABEL_ID, sentence.toString());
     }
 }
