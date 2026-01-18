@@ -21,24 +21,33 @@ public class GameScene extends JPanel {
     private JLabel showtimer; public static final int TIMER_ID = 2;
 
     private JButton submitButton;//提出ボタン
+    private Image backgroundImage; //背景画像
+
     public GameScene(){
         this.setLayout(null);
-        this.setBackground(Color.WHITE);//背景設定。画像を使うならここを改変
+        // this.setBackground(Color.WHITE);//背景設定。画像を使うならここを改変
+
+        ImageIcon icon = new ImageIcon("res/GameScene/god.png");
+        backgroundImage = icon.getImage();//背景画像追加
 
         cards = new ArrayList<CardView>();//手札リスト
         judge = new ArrayList<CardView>();//判定リスト
 
         judgeArea = new JPanel();//判定枠の作成
-        judgeArea.setBounds(120, 256, 720, 60);//配置はここの座標を変更
+        judgeArea.setBounds(20, 420, 920, 190);//配置はここの座標を変更
         judgeArea.setBackground(Color.DARK_GRAY);
         this.add(judgeArea);
 
         showLabel = new JLabel("中身");//作った文章表示の作成
-        showLabel.setBounds(120, 120, 720, 64);//配置はここの座標を変更
+        showLabel.setBounds(290, 90, 430, 75);//配置はここの座標を変更
         this.add(showLabel);
 
         submitButton = new JButton("提出");//提出ボタンの作成
-        submitButton.setBounds(850, 256, 80, 60);//配置はここの座標を変更
+        submitButton.setBounds(780, 265, 135, 115);//配置はここの座標を変更
+        submitButton.setBackground(Color.BLUE);// 背景色を黄色に設定
+        submitButton.setForeground(Color.WHITE);// 文字色（前景色）を赤色に設定
+        submitButton.setOpaque(true); // ボタンを不透明にして背景色を表示させる
+        submitButton.setBorderPainted(false); // 枠線を消すと、色がより綺麗に見えます（お好みで）
         this.add(submitButton);
 
         //timer表示用の関数作ってくれるとすｇｇｇｇっごく助かる。
@@ -46,6 +55,13 @@ public class GameScene extends JPanel {
         setSize(960, 640);//サイズ
     }
 
+    @Override
+    protected void paintComponent(Graphics g){
+        super.paintComponent(g);
+        if(backgroundImage != null){
+            g.drawImage(backgroundImage, 0, 0, this.getWidth(), this.getHeight(), this);
+        }
+    }
     public void GetCards(ArrayList<String> a, GameController controller){//文字列のリストからカードリストを作成、表示する関数
         for(int i=0; i < 12; i++){
             CardView c = new CardView(a.get(i), 20+60*i, 500);//カードの配置はここの座標を変更
@@ -96,6 +112,18 @@ public class GameScene extends JPanel {
             rets += s;
         }
         return rets;
+    }
+
+    public void setTheme(String themeName){
+        String path = "res/GameScene"+ themeName + ".png";
+        ImageIcon icon = new ImageIcon(path);
+
+        if(icon.getImageLoadStatus()==MediaTracker.COMPLETE) {
+            this.backgroundImage = icon.getImage();
+            this.repaint(); // 重要：画面を再描画して新しい画像を反映させる
+        } else {
+            System.out.println("画像が見つかりません: " + path);
+        }
     }
 
 }
