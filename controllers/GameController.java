@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import javax.swing.Timer;
 import java.util.Comparator;
 import java.util.List;
 import lib.CardInfo;
@@ -23,9 +24,11 @@ public class GameController extends MouseAdapter implements ActionListener{
     private GameScene view;
     private MainFrame mainFrame;//viewやmodelなどの関数呼び出し用
     private Point clickPoint; //mousePresed時の座標記憶先
-private final GameModel model;
-private final int themeId;
-private final String themeKey;
+    private Timer gameTimer;
+    private int remainingTime = 60;//制限時間は60秒
+    private final GameModel model;
+    private final int themeId;
+    private final String themeKey;
 
     public GameController(MainController mc) {
         this.mainCtrl = mc;
@@ -34,9 +37,11 @@ private final String themeKey;
         this.view = mainFrame.startGame();
         this.themeId = model.pickRandomThemeId();
         this.themeKey = model.getThemeKey(themeId);
+        view.setTheme(this.themeKey);
         ArrayList<String> cards = model.buildCardSet(themeKey);
         view.GenerateCards(cards, this);//thisがMouseAdapter
         view.addSubmitListener(this);//提出ボタンにListenerを付与
+        startTimer();
     }
     
     @Override   //MouseAdapterの再定義開始
@@ -66,7 +71,7 @@ private final String themeKey;
             Rectangle judgeRect = view.getJudgeAreaBounds();
 
             if(cardRect.intersects(judgeRect)){ //判定枠と重なっていた場合
-                card.lastp.y = 256; //y座標固定
+                card.lastp.y = 300; //y座標固定
                 card.lastp.x = card.getX(); card.info.lastp.x = card.lastp.x; //x座標をReleased時の値に更新
                 card.info.lastp.y = card.lastp.y;
                 view.addCardtoJudge(card);//view側でArrayListに追加
@@ -83,7 +88,12 @@ private final String themeKey;
 
         @Override
         public void actionPerformed(ActionEvent e){//提出ボタン用
-            if(e.getActionCommand().equals("提出")){
+            if(e.getActionCommand().equals("Submit")){
+                // 時間が0になった時の処理
+                if(gameTimer != null){
+                    gameTimer.stop();
+                }
+
                 mainCtrl.startJudge();
                 //view.updateLabel(1, "test");//この中身は提出後の動作全般。処理は""絶対に""それぞれ別で関数に書くこと。ここでは呼び出しがメイン
             }
@@ -113,5 +123,22 @@ private final String themeKey;
             sentence.append(word);
         }
         view.updateLabel(GameScene.LABEL_ID, sentence.toString());
+    }
+
+    private void startTimer(){
+        gameTimer = new Timer(1000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                remainingTime--;
+
+                view.updateLabel(GameScene.TIMER_ID, String.valueOf(remainingTime));
+
+                if(remainingTime <= 0){
+                    gameTimer.stop();
+                    mainCtrl.startJudge();
+                }
+            }
+        });
+        gameTimer.start();
     }
 }
