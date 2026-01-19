@@ -11,6 +11,14 @@ public class JudgeController{
         this.mainCtrl = mc;
         this.mainFrame = mc.mainFrame;
         this.view = mainFrame.startJudge();
-        //mainFrame.setVisible(true);
+        view.setEndButtonListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e){
+                if(e.getActionCommand().equals("END")){
+                    mainCtrl.startTitle();
+                }
+            }
+        });
     }
+    
 }

@@ -25,7 +25,7 @@ public class TitleController{
             public void actionPerformed(ActionEvent e){
                 TitleModel.TitleAction action = model.getAction(e.getActionCommand());
                 if(action == TitleModel.TitleAction.START){
-                    System.out.println("はじめるボタンが押されました");
+                    //System.out.println("はじめるボタンが押されました");
                     mainCtrl.startGame();
                     
                     /*mainFrame.getContentPane().removeAll();

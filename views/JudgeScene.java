@@ -1,7 +1,6 @@
 package views;
 import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
+import java.awt.event.ActionListener;
 import javax.swing.*;
 
 public class JudgeScene extends JPanel {
@@ -14,10 +13,15 @@ public class JudgeScene extends JPanel {
         this.setBackground(Color.WHITE);
 
 
-        goTitleButton = new JButton("はじめる");
+        goTitleButton = new JButton("おわる");
+        goTitleButton.setActionCommand("END");
         goTitleButton.setBounds(350, 400, 230, 80);
         goTitleButton.setBackground(Color.BLUE);
         this.add(goTitleButton);
 
+    }
+
+    public void setEndButtonListener(ActionListener listener){
+        goTitleButton.addActionListener(listener);
     }
 }
