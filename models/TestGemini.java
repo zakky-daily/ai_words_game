@@ -1,3 +1,7 @@
+// あくまでテスト用
+
+/*
+
 package models;
 
 public class TestGemini { 
@@ -5,10 +9,6 @@ public class TestGemini {
         ConnectGemini a = new ConnectGemini();
 
         // 信託風ゲーム
-        /*
-        a.connect("今から「信託風ゲーム」の定義をします……");
-        */
-
         
         String response = a.connect("""
             ### 指示
@@ -59,3 +59,5 @@ public class TestGemini {
         System.out.println(response);
     }
 }
+
+*/

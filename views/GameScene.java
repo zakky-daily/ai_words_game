@@ -43,7 +43,7 @@ public class GameScene extends JPanel {
         this.add(initArea);
 
 
-        showLabel = new JLabel("中身");//作った文章表示の作成
+        showLabel = new JLabel("");//作った文章表示の作成
         showLabel.setBounds(290, 60, 430, 80);//配置はここの座標を変更
         showLabel.setFont(new Font("Serif", Font.BOLD, 24));
         showLabel.setHorizontalAlignment(JLabel.CENTER);
@@ -132,15 +132,14 @@ public class GameScene extends JPanel {
     }
 
     public void addCardtoJudge(CardView card){//CardViewのArrayListであるjudgeにカードが入っているかで判定。
-        if(!judge.contains(card)){            //下の関数含め、if分岐ははModelでやるべき
-            judge.add(card);
-        }
+        if (judge.contains(card)) judge.remove(card);
+        judge.add(card);
+
+        // これで、リストが重なっている順になるはず
     }
 
     public void removeCard(CardView card){//下に同じく
-        if(judge.contains(card)){
-            judge.remove(card);
-        }
+        if (judge.contains(card)) judge.remove(card);
     }
 
     public ArrayList<CardView> getJudgeCards(){//Controller側で文章生成に使う

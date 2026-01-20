@@ -5,6 +5,8 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -13,7 +15,7 @@ import com.google.gson.JsonParser;
 
 public class ConnectGemini {
     private String key=System.getenv("GEMINI_API_KEY");
-    public String connect(String prompt) {
+    public Map<String, Object> connect(String prompt) {
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
             .uri(URI.create("https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent"))
@@ -46,11 +48,11 @@ public class ConnectGemini {
             return parseJson(responce_text);
         } catch(IOException | InterruptedException e) {
             e.printStackTrace();
-            return "";
+            return null;
         }
     }
 
-    public String parseJson(String json) {
+    public Map<String, Object> parseJson(String json) {
         JsonObject root = JsonParser.parseString(json).getAsJsonObject();
         if (root.has("error")) {
             System.err.println("Geminiとの通信に失敗しました。エラーコード:\n" + json);
@@ -65,6 +67,13 @@ public class ConnectGemini {
             JsonObject part = e.getAsJsonObject();
             if (part.has("text")) sb.append(part.get("text").getAsString());
         }
-        return sb.toString();
+
+        // ここから：Geminiが返した本文(JSON文字列)をパースして Map に詰める
+        JsonObject body = JsonParser.parseString(sb.toString()).getAsJsonObject();
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("score", body.get("点数").getAsInt());
+        result.put("message", body.get("コメント").getAsString());
+        return result;
     }
 }
