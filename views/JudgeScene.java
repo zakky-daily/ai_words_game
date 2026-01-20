@@ -15,7 +15,7 @@ public class JudgeScene extends JPanel {
         ImageIcon icon = new ImageIcon("res/JudgeScene/judge.png");
         this.backgroundImage = icon.getImage();//背景画像追加
 
-        scoreLabel = new JLabel();//作った文章表示の作成
+        scoreLabel = new JLabel();
         scoreLabel.setBounds(380, 120, 210, 160);
         scoreLabel.setFont(new Font("Serif", Font.BOLD, 75));
         scoreLabel.setHorizontalAlignment(JLabel.CENTER);
@@ -31,7 +31,7 @@ public class JudgeScene extends JPanel {
         goTitleButton.setActionCommand("END");
         goTitleButton.setBounds(370, 583, 240, 40);
         goTitleButton.setContentAreaFilled(false); // 背景を透明にする
-        goTitleButton.setBorderPainted(false);     // 枠線を透明にする（任意）
+        goTitleButton.setBorderPainted(false);     // 枠線を透明にする
         this.add(goTitleButton);
 
         setSize(960, 640);//サイズ
