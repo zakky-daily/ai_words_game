@@ -27,10 +27,11 @@ public class JudgeScene extends JPanel {
         this.add(commentLabel);
 
 
-        goTitleButton = new JButton("おわる");
+        goTitleButton = new JButton();
         goTitleButton.setActionCommand("END");
-        goTitleButton.setBounds(700, 445, 260, 185);
-        goTitleButton.setBackground(Color.BLUE);
+        goTitleButton.setBounds(370, 583, 240, 40);
+        goTitleButton.setContentAreaFilled(false); // 背景を透明にする
+        goTitleButton.setBorderPainted(false);     // 枠線を透明にする
         this.add(goTitleButton);
 
         setSize(960, 640);//サイズ

@@ -43,8 +43,8 @@ public class GameScene extends JPanel {
         this.add(initArea);
 
 
-        showLabel = new JLabel("");//作った文章表示の作成
-        showLabel.setBounds(290, 60, 430, 80);//配置はここの座標を変更
+        showLabel = new JLabel("ここに文字が反映されます");//作った文章表示の作成
+        showLabel.setBounds(240, 60, 540, 80);//配置はここの座標を変更
         showLabel.setFont(new Font("Serif", Font.BOLD, 24));
         showLabel.setHorizontalAlignment(JLabel.CENTER);
         this.add(showLabel);
