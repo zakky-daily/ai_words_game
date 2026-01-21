@@ -20,8 +20,8 @@ import lib.CardInfo;
 public class GameModel {
     public static final int CARD_WIDTH = 80;
     public static final int DEFAULT_CARD_COUNT = 6;
-    public static final int RANDOM_CARD_COUNT = 6;
-    public static final int TOTAL_CARD_COUNT = 12;
+    public static final int RANDOM_CARD_COUNT = 9;
+    public static final int TOTAL_CARD_COUNT = 15;
 
     private static final List<String> THEME_KEYS =
         Collections.unmodifiableList(Arrays.asList("oracle", "propose", "begging"));

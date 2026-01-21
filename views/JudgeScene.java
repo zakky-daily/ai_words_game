@@ -15,14 +15,16 @@ public class JudgeScene extends JPanel {
         ImageIcon icon = new ImageIcon("res/JudgeScene/judge.png");
         this.backgroundImage = icon.getImage();//背景画像追加
 
-        scoreLabel = new JLabel("30");//作った文章表示の作成
-        scoreLabel.setBounds(380, 120, 210, 160);
-        scoreLabel.setFont(new Font("Serif", Font.BOLD, 75));
+        scoreLabel = new JLabel();//作った文章表示の作成
+        scoreLabel.setBounds(380, 130, 210, 160);
+        scoreLabel.setFont(new Font("Serif", Font.BOLD, 160));
+        scoreLabel.setForeground(Color.decode("#FF7B28"));
         scoreLabel.setHorizontalAlignment(JLabel.CENTER);
         this.add(scoreLabel);
 
-        commentLabel = new JLabel("採点中");
+        commentLabel = new JLabel("判定中");
         commentLabel.setBounds(230, 420, 510, 110);
+        commentLabel.setFont(new Font(Font.MONOSPACED, Font.BOLD, 20));
         commentLabel.setHorizontalAlignment(JLabel.CENTER);
         this.add(commentLabel);
 

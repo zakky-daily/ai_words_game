@@ -17,7 +17,7 @@ import lib.CardInfo;
             setOpaque(true);
             setBackground(Color.white);
             setHorizontalAlignment(CENTER);
-            setBounds(x, y, 135, 70);
+            setBounds(x, y, 135, 65);
             setBorder(BorderFactory.createLineBorder(Color.BLACK));
         }
     }

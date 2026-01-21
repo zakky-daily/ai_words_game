@@ -74,7 +74,7 @@ public class GameController extends MouseAdapter implements ActionListener{
         Rectangle judgeRect = view.getJudgeAreaBounds();
 
         if(cardRect.intersects(judgeRect)){ //判定枠と重なっていた場合
-            card.lastp.y = 300; //y座標固定
+            card.lastp.y = 275; //y座標固定
             card.lastp.x = card.getX(); card.info.lastp.x = card.lastp.x; //x座標をReleased時の値に更新
             card.info.lastp.y = card.lastp.y;
             view.addCardtoJudge(card);//view側でArrayListに追加
