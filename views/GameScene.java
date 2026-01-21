@@ -33,12 +33,12 @@ public class GameScene extends JPanel {
         judge = new ArrayList<CardView>();//判定リスト
 
         judgeArea = new JPanel();//判定枠の作成
-        judgeArea.setBounds(20, 285, 780, 100);//配置はここの座標を変更
+        judgeArea.setBounds(20, 270, 795, 80);//配置はここの座標を変更
         judgeArea.setBackground(Color.LIGHT_GRAY);
         this.add(judgeArea);
 
         initArea = new JPanel();//カードが最初に置かれているパネルの作成
-        initArea.setBounds(20, 420, 920, 190);//配置はここの座標を変更
+        initArea.setBounds(50, 380, 880, 270);//配置はここの座標を変更
         initArea.setBackground(Color.DARK_GRAY);
         this.add(initArea);
 
@@ -60,7 +60,7 @@ public class GameScene extends JPanel {
 
         submitButton = new JButton(" ▶︎提出");//提出ボタンの作成
         submitButton.setActionCommand("Submit");
-        submitButton.setBounds(780, 285, 160, 100);//配置はここの座標を変更
+        submitButton.setBounds(795, 270, 160, 80);//配置はここの座標を変更
         submitButton.setBackground(Color.decode("#2F6EBA"));// 背景色を黄色に設定
         submitButton.setForeground(Color.WHITE);// 文字の色を白色に設定
         submitButton.setOpaque(true); // ボタンを不透明にして背景色を表示させる
@@ -72,8 +72,6 @@ public class GameScene extends JPanel {
         showtimer.setBounds(75,110, 90, 75);
         showtimer.setFont(new Font("Arial", Font.BOLD, 60));
         this.add(showtimer);
-        
-        //timer表示用の関数作ってくれるとすｇｇｇｇっごく助かる。
         
 
         setSize(960, 640);//サイズ
@@ -116,15 +114,15 @@ public class GameScene extends JPanel {
     }
 
     public void GenerateCards(ArrayList<String> a, GameController controller){//文字列のリストからカードリストを作成、表示する関数
-        for(int i=0; i < 12; i++){
-            CardView c = new CardView(a.get(i), 40+147*(i%6), 435+90*(i/6));//カードの配置はここの座標を変更
+        for(int i=0; i < 15; i++){
+            CardView c = new CardView(a.get(i), 75+172*(i%5), 395+85*(i/5));//カードの配置はここの座標を変更
             c.addMouseListener(controller);//GameControllerで用意したListenerをここで適用
             c.addMouseMotionListener(controller);
             cards.add(c);//リストに追加
             this.add(c);//パネルに追加
             this.setComponentZOrder(c, 0);//カードを最前面に追加
         }
-        this.repaint();//一応再描画。多分いらん
+        this.repaint();
     }
 
     public Rectangle getJudgeAreaBounds(){//判定枠を返す。Controllerでの判定用
