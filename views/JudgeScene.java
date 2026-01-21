@@ -4,8 +4,8 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 
 public class JudgeScene extends JPanel {
-    private JLabel scoreLabel;//点数
-    private JLabel commentLabel;//コメント
+    private JLabel scoreLabel; public static final int SCORE_ID = 1;//点数
+    private JLabel commentLabel; public static final int COMMENT_ID = 2;//コメント
     private JButton goTitleButton;//タイトルに戻る
     private Image backgroundImage;
 
@@ -43,6 +43,20 @@ public class JudgeScene extends JPanel {
         super.paintComponent(g);
         if(backgroundImage != null){
             g.drawImage(backgroundImage, 0, 0, this.getWidth(), this.getHeight(), this);
+        }
+    }
+
+        public void updateLabel(int id, String t){//指定したIDのJLabelの文字を変更する。タイマーと作れた文章用
+        switch (id) {
+            case SCORE_ID://1
+                scoreLabel.setText(t); //吹き出しの中を複数行に対応させた
+                break;
+            case COMMENT_ID://2
+                String displayText = "<html><div style='text-align: center; width: 360px;'>" + t + "</div></html>";
+                commentLabel.setText(displayText);
+                break;
+            default:
+                throw new AssertionError();
         }
     }
 

@@ -154,7 +154,6 @@ public class GameScene extends JPanel {
             case LABEL_ID://1
                 String displayText = "<html><div style='text-align: center; width: 360px;'>" + t + "</div></html>";
                 showLabel.setText(displayText); //吹き出しの中を複数行に対応させた
-                showLabel.repaint();
                 break;
             case TIMER_ID://2
                 showtimer.setText(t);

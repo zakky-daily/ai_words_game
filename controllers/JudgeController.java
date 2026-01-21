@@ -1,6 +1,6 @@
 package controllers;
 import java.awt.event.*;
-import java.util.*;
+import javax.swing.SwingUtilities;
 import views.*;
 
 public class JudgeController{
@@ -20,32 +20,26 @@ public class JudgeController{
                 }
             }
         });
+        String themeText = switch (themeKey) {
+            case "oracle" -> "神託";
+            case "propose" -> "プロポーズ";
+            case "begging" -> "命乞い";
+            default -> "???";
+        };
+        new Thread(() -> {
+            // ここはバックグラウンドスレッド（画面をフリーズさせない）
+            var response = mainCtrl.connectGemini.connect("""
+                # 指示
+                ロールプレイをします。他プレイヤーが作成した心打たれる文章をジャッチするのが、あなたの役目です。
+                以下の「入力データ」「ルール」をもとに文章を評価し、「出力形式」に従って結果を返してください。
 
-        String themeText = "???";
-        switch (themeKey) {
-            case "oracle":
-                themeText = "神託";
-                break;
-            case "propose":
-                themeText = "プロポーズ";
-                break;
-            case "begging":
-                themeText = "命乞い";
-                break;
-        }
+                # 入力データ
+                - テーマ：(例：神託、プロポーズ、命乞い)
+                - 文章：(プレイヤーが作成した文章)
 
-        var response = mainCtrl.connectGemini.connect("""
-            # 指示
-            ロールプレイをします。他プレイヤーが作成した心打たれる文章をジャッチするのが、あなたの役目です。
-            以下の「入力データ」「ルール」をもとに文章を評価し、「出力形式」に従って結果を返してください。
-
-            # 入力データ
-            - テーマ：(例：神託、プロポーズ、命乞い)
-            - 文章：(プレイヤーが作成した文章)
-
-            # 判定ルール
-            ## ステップ1：文法チェック
-            文章が日本語として到底理解不能、または意味不明な単語の羅列である場合は、0点としてください。
+                # 判定ルール
+                ## ステップ1：文法チェック
+                文章が日本語として到底理解不能、または意味不明な単語の羅列である場合は、0点としてください。
 
             ## ステップ2：点数の算出
             以下の基準によって、**0〜100点**で点数を出してください。
@@ -59,17 +53,28 @@ public class JudgeController{
             - 分析的視点(4割)と感情的視点(6割)を混ぜて、少し砕けた口調で話してください
             - 0点の場合は、辛辣にツッコミを入れてください
 
-            # 出力形式
-            点数とコメントをjson形式で返してください。
+                # 出力形式
+                点数とコメントをjson形式で返してください。
 
-            # 今回の入力
-            テーマ：%s
-            文章：%s
-            """.formatted(themeText, createdText)
-        );
+                # 今回の入力
+                テーマ：%s
+                文章：%s
+                """.formatted(themeText, createdText)
+            );
 
-        System.out.println(response.get("score"));
-        System.out.println(response.get("message"));
+            // 3. 通信が終わったら、画面更新処理をEDTに依頼する
+            SwingUtilities.invokeLater(() -> {
+                // ここは再びEDT（安全に画面を更新できる）
+                if (response != null) {
+                    view.updateLabel(1, "" + response.get("score"));
+                    view.updateLabel(2, "" + response.get("message"));
+                } else {
+                    // エラーハンドリング（API接続失敗時など）
+                    view.updateLabel(2, "通信エラーが発生しました。");
+                }
+            });
+
+        }).start();
     }
     
 }
