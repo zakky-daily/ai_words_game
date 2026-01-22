@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import models.TitleModel;
 import views.MainFrame;
 import views.TitleScene;
+import views.Dialog;
 
 
 public class TitleController{
@@ -12,9 +13,11 @@ public class TitleController{
     private MainController mainCtrl;
     private MainFrame mainFrame;
     private TitleScene titleScene;
+    private Dialog dialog;
 
     public TitleController(MainController mc) {
         this.model = new TitleModel();
+        this.dialog = new Dialog();
         // TitleSceneを取得
         this.mainCtrl = mc;
         this.mainFrame = mc.mainFrame;
@@ -41,7 +44,7 @@ public class TitleController{
             @Override
             public void actionPerformed(ActionEvent e) {
                 model.prevPage();// model更新
-                titleScene.updateView(
+                dialog.updateState(
                     model.getCurrentPage(),
                     model.isFirstPage(),
                     model.isLastPage()
@@ -52,7 +55,7 @@ public class TitleController{
             @Override
             public void actionPerformed(ActionEvent e) {
                 model.nextPage();// model更新
-                titleScene.updateView(
+                dialog.updateState(
                     model.getCurrentPage(),
                     model.isFirstPage(),
                     model.isLastPage()
@@ -60,7 +63,7 @@ public class TitleController{
             }
         };
 
-        titleScene.showDialog(
+        dialog.show(
             mainFrame, 
             prevAction, 
             nextAction, 

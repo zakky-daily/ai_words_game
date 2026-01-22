@@ -71,7 +71,6 @@ public class GameScene extends JPanel {
         showtimer.setBounds(75,110, 90, 75);
         showtimer.setFont(new Font("Arial", Font.BOLD, 60));
         this.add(showtimer);
-        
 
         setSize(960, 640);//サイズ
     }

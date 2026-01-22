@@ -7,9 +7,6 @@ public class TitleScene extends JPanel {
     private JButton startButton;
     private JButton wayToPlayButton;
     private Image backgroundImage;
-    private JLabel imageLabel;
-    private JButton prevButton;
-    private JButton nextButton;
 
     public TitleScene() {
         
@@ -50,45 +47,6 @@ public class TitleScene extends JPanel {
     }
 
     
-
-    public void showDialog(JFrame mainFrame, ActionListener prevAction, ActionListener nextAction, ImageIcon initialImage, boolean isFirst, boolean isLast) {
-        // 全体のパネル
-        JPanel panel = new JPanel(new BorderLayout());
-        
-        this.imageLabel = new JLabel(initialImage);// 画像を表示するラベル
-        this.imageLabel.setHorizontalAlignment(JLabel.CENTER);
-        panel.add(this.imageLabel, BorderLayout.CENTER);
-
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));// ボタンを表示するパネル
-        
-        this.prevButton = new JButton("◀");// 「◀ 前へ」ボタン
-        this.prevButton.setFont(new Font("SansSerif", Font.BOLD, 20));
-        this.prevButton.addActionListener(prevAction);
-        this.prevButton.setEnabled(false); // 最初のページなら無効化
-
-        this.nextButton = new JButton("▶");// 「次へ ▶」ボタン
-        this.nextButton.setFont(new Font("SansSerif", Font.BOLD, 20));
-        this.nextButton.addActionListener(nextAction);
-        this.nextButton.setEnabled(!isLast);//最後のページなら無効化
-        
-        buttonPanel.add(this.prevButton);
-        buttonPanel.add(this.nextButton);
-
-        panel.add(buttonPanel, BorderLayout.SOUTH);
-
-        JOptionPane.showMessageDialog(
-            mainFrame, 
-            panel, 
-            "遊び方", 
-            JOptionPane.PLAIN_MESSAGE
-        );
-    }
-
-    public void updateView(ImageIcon nextImage, boolean isFirst, boolean isLast){
-        this.imageLabel.setIcon(nextImage);
-        this.prevButton.setEnabled(!isFirst);
-        this.nextButton.setEnabled(!isLast);
-    }
 
 
     @Override
