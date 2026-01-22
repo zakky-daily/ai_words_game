@@ -1,13 +1,16 @@
 package views;
 import java.awt.*;
 import java.awt.event.*;
-import java.net.URL;
 import javax.swing.*;
 
 public class TitleScene extends JPanel {
     private JButton startButton;
     private JButton wayToPlayButton;
     private Image backgroundImage;
+    private JLabel imageLabel;
+    private JButton prevButton;
+    private JButton nextButton;
+
     public TitleScene() {
         
         this.setLayout(null);
@@ -16,20 +19,21 @@ public class TitleScene extends JPanel {
         // スタートボタンを追加
         startButton = new JButton();
         startButton.setActionCommand("START");
-        startButton.setBounds(380, 495, 225, 50);
+        startButton.setBounds(390, 485, 215, 55);
         startButton.setContentAreaFilled(false); // 背景を透明にする
         startButton.setBorderPainted(false);// 枠線を透明にする
-        startButton.setFocusPainted(false);//タップした時に出てくる枠線を消す
+        startButton.setFocusPainted(false);//ボタンとしての枠を消す
         this.add(startButton);
     
 
         // 遊び方ボタンを追加
         wayToPlayButton = new JButton();
         wayToPlayButton.setActionCommand("HOW_TO_PLAY");
-        wayToPlayButton.setBounds(380, 575, 225, 50);
+        wayToPlayButton.setBounds(390, 570, 215, 55);
         wayToPlayButton.setContentAreaFilled(false); // 背景を透明にする
-        wayToPlayButton.setBorderPainted(false);     // 枠線を透明にする
-        wayToPlayButton.setFocusPainted(false);//タップした時に出てくる枠線を消す
+        wayToPlayButton.setBorderPainted(false);// 枠線を透明にする
+        wayToPlayButton.setFocusPainted(false);//ボタンとしての枠を消す
+        
         this.add(wayToPlayButton);
 
 
@@ -45,6 +49,48 @@ public class TitleScene extends JPanel {
         setSize(960, 640);//サイズ
     }
 
+    
+
+    public void showDialog(JFrame mainFrame, ActionListener prevAction, ActionListener nextAction, ImageIcon initialImage, boolean isFirst, boolean isLast) {
+        // 全体のパネル
+        JPanel panel = new JPanel(new BorderLayout());
+        
+        this.imageLabel = new JLabel(initialImage);// 画像を表示するラベル
+        this.imageLabel.setHorizontalAlignment(JLabel.CENTER);
+        panel.add(this.imageLabel, BorderLayout.CENTER);
+
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));// ボタンを表示するパネル
+        
+        this.prevButton = new JButton("◀");// 「◀ 前へ」ボタン
+        this.prevButton.setFont(new Font("SansSerif", Font.BOLD, 20));
+        this.prevButton.addActionListener(prevAction);
+        this.prevButton.setEnabled(false); // 最初のページなら無効化
+
+        this.nextButton = new JButton("▶");// 「次へ ▶」ボタン
+        this.nextButton.setFont(new Font("SansSerif", Font.BOLD, 20));
+        this.nextButton.addActionListener(nextAction);
+        this.nextButton.setEnabled(!isLast);//最後のページなら無効化
+        
+        buttonPanel.add(this.prevButton);
+        buttonPanel.add(this.nextButton);
+
+        panel.add(buttonPanel, BorderLayout.SOUTH);
+
+        JOptionPane.showMessageDialog(
+            mainFrame, 
+            panel, 
+            "遊び方", 
+            JOptionPane.PLAIN_MESSAGE
+        );
+    }
+
+    public void updateView(ImageIcon nextImage, boolean isFirst, boolean isLast){
+        this.imageLabel.setIcon(nextImage);
+        this.prevButton.setEnabled(!isFirst);
+        this.nextButton.setEnabled(!isLast);
+    }
+
+
     @Override
     protected void paintComponent(Graphics g) {// 背景画像の大きさをウィンドウの大きさに揃える
         super.paintComponent(g);
@@ -53,22 +99,6 @@ public class TitleScene extends JPanel {
             g.drawImage(backgroundImage, 0, 0, this.getWidth(), this.getHeight(), this);
         }
     }
-
-    public void showDialog(JFrame mainFrame){
-        // manual.pngの読み込み
-        URL manualURL = getClass().getResource("/res/Title/manual.png");
-        ImageIcon manualIcon = new ImageIcon("res/Title/manual.png");
-
-        if(manualIcon.getImageLoadStatus() == MediaTracker.COMPLETE){
-            Image img = manualIcon.getImage().getScaledInstance(800, 500, Image.SCALE_SMOOTH);
-            JOptionPane.showMessageDialog(mainFrame, 
-                new JLabel(new ImageIcon(img)), "遊び方",JOptionPane.PLAIN_MESSAGE
-            );
-        } else {
-            JOptionPane.showMessageDialog(mainFrame, "遊び方画像が見つかりません。");
-        }
-    }
-    
 
     public void setStartButtonListener(ActionListener listener){
         startButton.addActionListener(listener);

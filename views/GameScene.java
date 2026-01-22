@@ -5,7 +5,6 @@ import java.awt.event.*;
 import java.util.*;
 import javax.swing.*;
 
-//!!!CardViewクラスはファイル分けました。viewsディレクトリにあります!!!
 
 public class GameScene extends JPanel {
     //テーマ決定
