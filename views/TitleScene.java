@@ -16,7 +16,7 @@ public class TitleScene extends JPanel {
         // スタートボタンを追加
         startButton = new JButton();
         startButton.setActionCommand("START");
-        startButton.setBounds(390, 485, 215, 55);
+        startButton.setBounds(375, 485, 195, 45);
         startButton.setContentAreaFilled(false); // 背景を透明にする
         startButton.setBorderPainted(false);// 枠線を透明にする
         startButton.setFocusPainted(false);//ボタンとしての枠を消す
@@ -26,7 +26,7 @@ public class TitleScene extends JPanel {
         // 遊び方ボタンを追加
         wayToPlayButton = new JButton();
         wayToPlayButton.setActionCommand("HOW_TO_PLAY");
-        wayToPlayButton.setBounds(390, 570, 215, 55);
+        wayToPlayButton.setBounds(375, 555, 195, 45);
         wayToPlayButton.setContentAreaFilled(false); // 背景を透明にする
         wayToPlayButton.setBorderPainted(false);// 枠線を透明にする
         wayToPlayButton.setFocusPainted(false);//ボタンとしての枠を消す
