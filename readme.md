@@ -12,11 +12,11 @@
 
 1. `export GEMINI_API_KEY=【APIキー】`
 
-2. `export CLASSPATH="bin:lib/*"`
-
 **↓は毎回やる**
 
-3. `javac -d bin $(find . -name '*.java') && java Main` (必ずこれにすること!!)
+2. `javac -d bin -cp ".;lib/*" Main.java controllers/*.java`
+
+3. `java -cp "bin;lib/*" Main`
 
 ## 実行方法(Windows-Powershell)
 
