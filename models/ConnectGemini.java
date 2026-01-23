@@ -17,29 +17,28 @@ public class ConnectGemini {
     private String key=System.getenv("GEMINI_API_KEY");
     public Map<String, Object> connect(String prompt) {
         HttpClient client = HttpClient.newHttpClient();
+        String body = String.format("{\n" +
+            "  \"contents\": [{\n" +
+            "    \"parts\": [{ \"text\": \"%s\" }]\n" +
+            "  }],\n" +
+            "  \"generationConfig\": {\n" +
+            "    \"responseMimeType\": \"application/json\",\n" +
+            "    \"responseJsonSchema\": {\n" +
+            "      \"type\": \"object\",\n" +
+            "      \"properties\": {\n" +
+            "        \"点数\": { \"type\": \"integer\", \"minimum\": 0, \"maximum\": 100 },\n" +
+            "        \"コメント\": { \"type\": \"string\" }\n" +
+            "      },\n" +
+            "      \"required\": [\"点数\", \"コメント\"],\n" +
+            "      \"additionalProperties\": false\n" +
+            "    }\n" +
+            "  }\n" +
+            "}\n", prompt);
         HttpRequest request = HttpRequest.newBuilder()
             .uri(URI.create("https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent"))
             .header("x-goog-api-key", key)
             .header("Content-Type", "application/json")
-            .POST(HttpRequest.BodyPublishers.ofString("""
-                {
-                    "contents": [{
-                        "parts": [{ "text": "%s" }]
-                    }],
-                    "generationConfig": {
-                        "responseMimeType": "application/json",
-                        "responseJsonSchema": {
-                            "type": "object",
-                            "properties": {
-                                "点数": { "type": "integer", "minimum": 0, "maximum": 100 },
-                                "コメント": { "type": "string" }
-                            },
-                            "required": ["点数", "コメント"],
-                            "additionalProperties": false
-                        }
-                    }
-                }
-                """.formatted(prompt)))
+            .POST(HttpRequest.BodyPublishers.ofString(body))
             .build();
 
         try {
