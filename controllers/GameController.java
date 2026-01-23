@@ -1,19 +1,21 @@
 package controllers;
 
 import java.awt.Component;
+import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.Timer;
-import java.util.Comparator;
-import java.util.List;
+import javax.imageio.ImageIO;
 import java.util.TreeMap;
 
-import lib.CardInfo;
 import models.GameModel;
 import views.CardView;
 import views.GameScene;
@@ -97,6 +99,7 @@ public class GameController extends MouseAdapter implements ActionListener{
                 gameTimer.stop();
             }
 
+            captureGameScene();
             mainCtrl.startJudge(themeKey, this.createdText);
             //view.updateLabel(1, "test");//この中身は提出後の動作全般。処理は""絶対に""それぞれ別で関数に書くこと。ここでは呼び出しがメイン
         }
@@ -127,10 +130,23 @@ public class GameController extends MouseAdapter implements ActionListener{
 
                 if(remainingTime <= 0){
                     gameTimer.stop();
+                    captureGameScene();
                     mainCtrl.startJudge(themeKey, GameController.this.createdText);
                 }
             }
         });
         gameTimer.start();
+    }
+
+    private void captureGameScene() {
+        BufferedImage image = new BufferedImage(view.getWidth(), view.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        Graphics g = image.getGraphics();
+        view.paintAll(g);
+        g.dispose();
+        try {
+            ImageIO.write(image, "png", new File("res/game_scene.png"));
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 }

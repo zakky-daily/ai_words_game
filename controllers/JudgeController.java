@@ -1,5 +1,19 @@
 package controllers;
+import java.awt.Desktop;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import javax.imageio.ImageIO;
 import javax.swing.SwingUtilities;
 import views.*;
 
@@ -17,6 +31,8 @@ public class JudgeController{
             public void actionPerformed(ActionEvent e){
                 if(e.getActionCommand().equals("END")){
                     mainCtrl.startTitle();
+                } else if (e.getActionCommand().equals("SHARE")) {
+                    shareOnTwitter(themeKey, createdText);
                 }
             }
         });
@@ -72,9 +88,118 @@ public class JudgeController{
                     // エラーハンドリング（API接続失敗時など）
                     view.updateLabel(2, "通信エラーが発生しました。");
                 }
+                view.showXButton();
+                captureJudgeScene();
             });
 
         }).start();
+    }
+
+    private void captureJudgeScene() {
+        BufferedImage image = new BufferedImage(view.getWidth(), view.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        Graphics g = image.getGraphics();
+        view.paintAll(g);
+        g.dispose();
+        try {
+            ImageIO.write(image, "png", new File("res/judge_scene.png"));
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void shareOnTwitter(String themeKey, String createdText) {
+        SwingUtilities.invokeLater(() -> view.showLoading());
+        new Thread(() -> {
+            try {
+                File merged = buildMergedImage();
+                String imageUrl = uploadToCatbox(merged, "image/png");
+                if (imageUrl == null || imageUrl.isBlank()) {
+                    return;
+                }
+                openTweetComposerWithUrl(imageUrl, themeKey, createdText);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            } finally {
+                SwingUtilities.invokeLater(() -> view.hideLoading());
+            }
+        }).start();
+    }
+
+    private File buildMergedImage() throws IOException {
+        BufferedImage left = ImageIO.read(new File("res/game_scene.png"));
+        BufferedImage right = ImageIO.read(new File("res/judge_scene.png"));
+        int width = left.getWidth() + right.getWidth();
+        int height = Math.max(left.getHeight(), right.getHeight());
+        BufferedImage merged = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = merged.createGraphics();
+        g.drawImage(left, 0, 0, null);
+        g.drawImage(right, left.getWidth(), 0, null);
+        g.dispose();
+        File out = new File("res/share_scene.png");
+        ImageIO.write(merged, "png", out);
+        return out;
+    }
+
+    private String uploadToCatbox(File file, String contentType) throws IOException {
+        String boundary = "----CodexBoundary" + System.currentTimeMillis();
+        HttpURLConnection conn = (HttpURLConnection) new URL("https://catbox.moe/user/api.php").openConnection();
+        conn.setDoOutput(true);
+        conn.setRequestMethod("POST");
+        conn.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
+
+        String lineBreak = "\r\n";
+        try (OutputStream out = conn.getOutputStream()) {
+            out.write(("--" + boundary + lineBreak).getBytes(StandardCharsets.UTF_8));
+            out.write("Content-Disposition: form-data; name=\"reqtype\"".getBytes(StandardCharsets.UTF_8));
+            out.write((lineBreak + lineBreak).getBytes(StandardCharsets.UTF_8));
+            out.write("fileupload".getBytes(StandardCharsets.UTF_8));
+            out.write(lineBreak.getBytes(StandardCharsets.UTF_8));
+
+            out.write(("--" + boundary + lineBreak).getBytes(StandardCharsets.UTF_8));
+            out.write(("Content-Disposition: form-data; name=\"fileToUpload\"; filename=\"" + file.getName() + "\"").getBytes(StandardCharsets.UTF_8));
+            out.write(lineBreak.getBytes(StandardCharsets.UTF_8));
+            out.write(("Content-Type: " + contentType).getBytes(StandardCharsets.UTF_8));
+            out.write((lineBreak + lineBreak).getBytes(StandardCharsets.UTF_8));
+            out.write(Files.readAllBytes(file.toPath()));
+            out.write(lineBreak.getBytes(StandardCharsets.UTF_8));
+            out.write(("--" + boundary + "--" + lineBreak).getBytes(StandardCharsets.UTF_8));
+        }
+
+        if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
+            return null;
+        }
+        return new String(conn.getInputStream().readAllBytes(), StandardCharsets.UTF_8).trim();
+    }
+
+    private void openTweetComposerWithUrl(String urlToShare, String themeKey, String createdText) throws IOException {
+        if (!Desktop.isDesktopSupported()) {
+            return;
+        }
+
+        String timeText = switch (themeKey) {
+            case "oracle" -> "聖なるお告げ";
+            case "propose" -> "プロポーズ中";
+            case "begging" -> "命乞い中";
+            default -> "???";
+        };
+
+        String personText = switch (themeKey) {
+            case "oracle" -> "神";
+            case "propose" -> "俺";
+            case "begging" -> "俺";
+            default -> "???";
+        };
+
+        String text = """
+#ぼっちAIコミュレーター
+
+【%s】
+%s「%s」
+
+★☆衝撃のAI審査結果は...こちらでした！☆★
+%s""".formatted(timeText, personText, createdText, urlToShare);       
+        String url = "https://twitter.com/intent/tweet?text=" + URLEncoder.encode(text, StandardCharsets.UTF_8);
+        Desktop.getDesktop().browse(URI.create(url));
     }
     
 }

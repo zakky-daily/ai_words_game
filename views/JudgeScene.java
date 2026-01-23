@@ -7,6 +7,8 @@ public class JudgeScene extends JPanel {
     private JLabel scoreLabel; public static final int SCORE_ID = 1;//点数
     private JLabel commentLabel; public static final int COMMENT_ID = 2;//コメント
     private JButton goTitleButton;//タイトルに戻る
+    private JButton xButton;//通信後に表示するボタン
+    private JLabel loadingLabel;//共有処理中の表示
     private Image backgroundImage;
 
     public JudgeScene() {
@@ -36,6 +38,38 @@ public class JudgeScene extends JPanel {
         goTitleButton.setBorderPainted(false);     // 枠線を透明にする
         this.add(goTitleButton);
 
+        ImageIcon rawXIcon = new ImageIcon("res/JudgeScene/x.png");
+        int xWidth = rawXIcon.getIconWidth() / 4;
+        int xHeight = rawXIcon.getIconHeight() / 4;
+        ImageIcon xIcon = new ImageIcon(rawXIcon.getImage().getScaledInstance(xWidth, xHeight, Image.SCALE_SMOOTH));
+        xButton = new JButton(xIcon);
+        xButton.setActionCommand("SHARE");
+        xButton.setBounds(960 - xWidth - 20, 20, xWidth, xHeight);
+        xButton.setContentAreaFilled(false);
+        xButton.setBorderPainted(false);
+        xButton.setFocusPainted(false);
+        xButton.setVisible(false);
+        this.add(xButton);
+
+        loadingLabel = new JLabel("Loading...") {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setColor(new Color(0, 0, 0, 180));
+                g2.fillRect(0, 0, getWidth(), getHeight());
+                g2.dispose();
+                super.paintComponent(g);
+            }
+        };
+        loadingLabel.setBounds(0, 0, 960, 640);
+        loadingLabel.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 28));
+        loadingLabel.setForeground(Color.WHITE);
+        loadingLabel.setOpaque(false);
+        loadingLabel.setHorizontalAlignment(JLabel.CENTER);
+        loadingLabel.setVerticalAlignment(JLabel.CENTER);
+        loadingLabel.setVisible(false);
+        this.add(loadingLabel);
+
         setSize(960, 640);//サイズ
 
     }
@@ -64,5 +98,21 @@ public class JudgeScene extends JPanel {
 
     public void setEndButtonListener(ActionListener listener){
         goTitleButton.addActionListener(listener);
+        xButton.addActionListener(listener);
+    }
+
+    public void showXButton(){
+        xButton.setVisible(true);
+    }
+
+    public void showLoading(){
+        loadingLabel.setBounds(0, 0, getWidth(), getHeight());
+        loadingLabel.setVisible(true);
+        setComponentZOrder(loadingLabel, 0);
+        repaint();
+    }
+
+    public void hideLoading(){
+        loadingLabel.setVisible(false);
     }
 }

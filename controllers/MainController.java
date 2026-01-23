@@ -26,14 +26,14 @@ public class MainController {
     }
 
     public void startTitle(){
-        TitleController titleCtrl = new TitleController(this);
+        new TitleController(this);
     }
 
     public void startGame(){
-        GameController gameCtrl = new GameController(this);
+        new GameController(this);
     }
 
     public void startJudge(String themeKey, String createdText){
-        JudgeController judgeCtrl = new JudgeController(this, themeKey, createdText);
+        new JudgeController(this, themeKey, createdText);
     }
 }
