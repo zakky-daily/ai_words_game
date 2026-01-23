@@ -18,7 +18,7 @@ public class ConnectGemini {
     public Map<String, Object> connect(String prompt) {
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
-            .uri(URI.create("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"))
+            .uri(URI.create("https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent"))
             .header("x-goog-api-key", key)
             .header("Content-Type", "application/json")
             .POST(HttpRequest.BodyPublishers.ofString("""
