@@ -1,7 +1,7 @@
 package views;
 import java.awt.*;
 import javax.swing.*;
-import lib.CardInfo;
+import models.CardInfo;
 
     public class CardView extends JLabel{
         public CardInfo info;

@@ -1,9 +1,11 @@
 package models;
 
+import java.io.InputStream;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -97,7 +99,9 @@ public class GameModel {
             return cardMap;
         }
         try {
-            String json = Files.readString(Path.of("models", "card_list.json"));
+            //String json = Files.readString(Path.of("models", "card_list.json"));
+            java.io.InputStream is = getClass().getClassLoader().getResourceAsStream("models/card_list.json");
+            String json = new String(is.readAllBytes(), java.nio.charset.StandardCharsets.UTF_8);
             Type type = new TypeToken<Map<String, List<String>>>() {}.getType();
             cardMap = new Gson().fromJson(json, type);
             return cardMap;

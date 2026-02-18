@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 import javax.swing.*;
+import java.net.URL;
 
 
 public class GameScene extends JPanel {
@@ -102,7 +103,9 @@ public class GameScene extends JPanel {
                 themeText = "命乞い";
                 break;
         }
-        ImageIcon icon = new ImageIcon("res/GameScene/" + filename);
+        //ImageIcon icon = new ImageIcon("res/GameScene/" + filename);
+        URL url = GameScene.class.getClassLoader().getResource("res/GameScene/" + filename);
+        ImageIcon icon = new ImageIcon(url);
         if(icon.getImageLoadStatus() == MediaTracker.COMPLETE){//テーマによって背景変更
             this.backgroundImage = icon.getImage();
         }

@@ -1,6 +1,7 @@
 package views;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.net.URL;
 import javax.swing.*;
 
 public class JudgeScene extends JPanel {
@@ -13,8 +14,9 @@ public class JudgeScene extends JPanel {
 
     public JudgeScene() {
         this.setLayout(null);
-
-        ImageIcon icon = new ImageIcon("res/JudgeScene/judge.png");
+        URL url = JudgeScene.class.getClassLoader().getResource("res/JudgeScene/judge.png");
+        ImageIcon icon = new ImageIcon(url);
+        //ImageIcon icon = new ImageIcon("res/JudgeScene/judge.png");
         this.backgroundImage = icon.getImage();//背景画像追加
 
         scoreLabel = new JLabel();//作った文章表示の作成
@@ -38,7 +40,8 @@ public class JudgeScene extends JPanel {
         goTitleButton.setBorderPainted(false);     // 枠線を透明にする
         this.add(goTitleButton);
 
-        ImageIcon rawXIcon = new ImageIcon("res/JudgeScene/x.png");
+        URL rawXUrl = JudgeScene.class.getClassLoader().getResource("res/JudgeScene/x.png");
+        ImageIcon rawXIcon = new ImageIcon(rawXUrl);
         int xWidth = rawXIcon.getIconWidth() / 4;
         int xHeight = rawXIcon.getIconHeight() / 4;
         ImageIcon xIcon = new ImageIcon(rawXIcon.getImage().getScaledInstance(xWidth, xHeight, Image.SCALE_SMOOTH));

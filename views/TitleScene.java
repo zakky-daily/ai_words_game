@@ -1,6 +1,7 @@
 package views;
 import java.awt.*;
 import java.awt.event.*;
+import java.net.URL;
 import javax.swing.*;
 
 public class TitleScene extends JPanel {
@@ -38,7 +39,9 @@ public class TitleScene extends JPanel {
 
 
         // 背景画像を用意
-        ImageIcon icon = new ImageIcon("res/Title/title.png");
+        //ImageIcon icon = new ImageIcon("res/Title/title.png");
+        URL url = TitleScene.class.getClassLoader().getResource("res/Title/title.png");
+        ImageIcon icon = new ImageIcon(url);
         if (icon.getImageLoadStatus() == MediaTracker.COMPLETE) {
             backgroundImage = icon.getImage();
         } else {
