@@ -15,7 +15,7 @@ public class JudgeScene extends JPanel {
     public JudgeScene() {
         this.setLayout(null);
         URL url = JudgeScene.class.getClassLoader().getResource("res/JudgeScene/judge.png");
-        ImageIcon icon = new ImageIcon(url);
+        ImageIcon icon = (url != null) ? new ImageIcon(url) : new ImageIcon("res/JudgeScene/judge.png");
         //ImageIcon icon = new ImageIcon("res/JudgeScene/judge.png");
         this.backgroundImage = icon.getImage();//背景画像追加
 
@@ -41,7 +41,7 @@ public class JudgeScene extends JPanel {
         this.add(goTitleButton);
 
         URL rawXUrl = JudgeScene.class.getClassLoader().getResource("res/JudgeScene/x.png");
-        ImageIcon rawXIcon = new ImageIcon(rawXUrl);
+        ImageIcon rawXIcon = (rawXUrl != null) ? new ImageIcon(rawXUrl) : new ImageIcon("res/JudgeScene/x.png");
         int xWidth = rawXIcon.getIconWidth() / 4;
         int xHeight = rawXIcon.getIconHeight() / 4;
         ImageIcon xIcon = new ImageIcon(rawXIcon.getImage().getScaledInstance(xWidth, xHeight, Image.SCALE_SMOOTH));

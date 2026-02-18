@@ -1,6 +1,7 @@
 package models;
 import java.awt.*;
 import java.util.*;
+import java.net.URL;
 import javax.swing.*;
 
 public class TitleModel {
@@ -18,7 +19,8 @@ public class TitleModel {
         };
         pages = new ArrayList<>();
         for (String path : imagePaths) {
-            ImageIcon icon = new ImageIcon(path);
+            URL url = TitleModel.class.getClassLoader().getResource(path);
+            ImageIcon icon = (url != null) ? new ImageIcon(url) : new ImageIcon(path);
             if (icon.getImageLoadStatus() == MediaTracker.COMPLETE) {
                 // サイズ調整 (例: 800x500)
                 Image img = icon.getImage().getScaledInstance(800, 500, Image.SCALE_SMOOTH);

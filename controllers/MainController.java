@@ -1,10 +1,14 @@
 package controllers;
 import models.ConnectGemini;
+import java.awt.image.BufferedImage;
 import views.*;
 
 public class MainController {
     public MainFrame mainFrame;
     public ConnectGemini connectGemini;
+
+    private volatile BufferedImage gameSceneImage;
+    private volatile BufferedImage judgeSceneImage;
     
     public MainController() {
         mainFrame = new MainFrame();            // フレームの生成
@@ -22,5 +26,21 @@ public class MainController {
 
     public void startJudge(String themeKey, String createdText){
         new JudgeController(this, themeKey, createdText);
+    }
+
+    public void setGameSceneImage(BufferedImage image) {
+        this.gameSceneImage = image;
+    }
+
+    public BufferedImage getGameSceneImage() {
+        return gameSceneImage;
+    }
+
+    public void setJudgeSceneImage(BufferedImage image) {
+        this.judgeSceneImage = image;
+    }
+
+    public BufferedImage getJudgeSceneImage() {
+        return judgeSceneImage;
     }
 }

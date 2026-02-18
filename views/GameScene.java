@@ -105,7 +105,7 @@ public class GameScene extends JPanel {
         }
         //ImageIcon icon = new ImageIcon("res/GameScene/" + filename);
         URL url = GameScene.class.getClassLoader().getResource("res/GameScene/" + filename);
-        ImageIcon icon = new ImageIcon(url);
+        ImageIcon icon = (url != null) ? new ImageIcon(url) : new ImageIcon("res/GameScene/" + filename);
         if(icon.getImageLoadStatus() == MediaTracker.COMPLETE){//テーマによって背景変更
             this.backgroundImage = icon.getImage();
         }

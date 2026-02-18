@@ -9,11 +9,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.Timer;
-import javax.imageio.ImageIO;
 import java.util.TreeMap;
 
 import models.GameModel;
@@ -141,10 +138,6 @@ public class GameController extends MouseAdapter implements ActionListener{
         Graphics g = image.getGraphics();
         view.paintAll(g);
         g.dispose();
-        try {
-            ImageIO.write(image, "png", new File("res/game_scene.png"));
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
+        mainCtrl.setGameSceneImage(image);
     }
 }

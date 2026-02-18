@@ -41,7 +41,7 @@ public class TitleScene extends JPanel {
         // 背景画像を用意
         //ImageIcon icon = new ImageIcon("res/Title/title.png");
         URL url = TitleScene.class.getClassLoader().getResource("res/Title/title.png");
-        ImageIcon icon = new ImageIcon(url);
+        ImageIcon icon = (url != null) ? new ImageIcon(url) : new ImageIcon("res/Title/title.png");
         if (icon.getImageLoadStatus() == MediaTracker.COMPLETE) {
             backgroundImage = icon.getImage();
         } else {

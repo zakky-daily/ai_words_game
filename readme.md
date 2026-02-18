@@ -12,7 +12,7 @@
 
 1. `export GEMINI_API_KEY=【APIキー】`
 
-2. `export CLASSPATH="bin:lib/*"`
+2. `export CLASSPATH=".:bin:lib/*"`
 
 **↓は毎回やる**
 

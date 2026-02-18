@@ -4,7 +4,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -12,7 +12,6 @@ import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import javax.imageio.ImageIO;
 import javax.swing.SwingUtilities;
 import views.*;
@@ -107,11 +106,7 @@ public class JudgeController{
         Graphics g = image.getGraphics();
         view.paintAll(g);
         g.dispose();
-        try {
-            ImageIO.write(image, "png", new File("res/judge_scene.png"));
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
+        mainCtrl.setJudgeSceneImage(image);
     }
 
     // Twitter共有機能
@@ -119,8 +114,9 @@ public class JudgeController{
         SwingUtilities.invokeLater(() -> view.showLoading());
         new Thread(() -> {
             try {
-                File merged = buildMergedImage();
-                String imageUrl = uploadToCatbox(merged, "image/png");
+                BufferedImage merged = buildMergedImage();
+                byte[] mergedPng = toPngBytes(merged);
+                String imageUrl = uploadToCatbox(mergedPng, "share_scene.png", "image/png");
                 if (imageUrl == null || imageUrl.isBlank()) {
                     return;
                 }
@@ -134,9 +130,12 @@ public class JudgeController{
     }
 
     // ゲーム画面と結果画面を結合
-    private File buildMergedImage() throws IOException {
-        BufferedImage left = ImageIO.read(new File("res/game_scene.png"));
-        BufferedImage right = ImageIO.read(new File("res/judge_scene.png"));
+    private BufferedImage buildMergedImage() throws IOException {
+        BufferedImage left = mainCtrl.getGameSceneImage();
+        BufferedImage right = mainCtrl.getJudgeSceneImage();
+        if (left == null || right == null) {
+            throw new IOException("Share images are not available. (gameScene=" + (left != null) + ", judgeScene=" + (right != null) + ")");
+        }
         int width = left.getWidth() + right.getWidth();
         int height = Math.max(left.getHeight(), right.getHeight());
         BufferedImage merged = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
@@ -144,13 +143,11 @@ public class JudgeController{
         g.drawImage(left, 0, 0, null);
         g.drawImage(right, left.getWidth(), 0, null);
         g.dispose();
-        File out = new File("res/share_scene.png");
-        ImageIO.write(merged, "png", out);
-        return out;
+        return merged;
     }
 
     // Catboxに画像アップロード
-    private String uploadToCatbox(File file, String contentType) throws IOException {
+    private String uploadToCatbox(byte[] fileBytes, String fileName, String contentType) throws IOException {
         String boundary = "----CodexBoundary" + System.currentTimeMillis();
         HttpURLConnection conn = (HttpURLConnection) new URL("https://catbox.moe/user/api.php").openConnection();
         conn.setDoOutput(true);
@@ -166,11 +163,11 @@ public class JudgeController{
             out.write(lineBreak.getBytes(StandardCharsets.UTF_8));
 
             out.write(("--" + boundary + lineBreak).getBytes(StandardCharsets.UTF_8));
-            out.write(("Content-Disposition: form-data; name=\"fileToUpload\"; filename=\"" + file.getName() + "\"").getBytes(StandardCharsets.UTF_8));
+            out.write(("Content-Disposition: form-data; name=\"fileToUpload\"; filename=\"" + fileName + "\"").getBytes(StandardCharsets.UTF_8));
             out.write(lineBreak.getBytes(StandardCharsets.UTF_8));
             out.write(("Content-Type: " + contentType).getBytes(StandardCharsets.UTF_8));
             out.write((lineBreak + lineBreak).getBytes(StandardCharsets.UTF_8));
-            out.write(Files.readAllBytes(file.toPath()));
+            out.write(fileBytes);
             out.write(lineBreak.getBytes(StandardCharsets.UTF_8));
             out.write(("--" + boundary + "--" + lineBreak).getBytes(StandardCharsets.UTF_8));
         }
@@ -179,6 +176,12 @@ public class JudgeController{
             return null;
         }
         return new String(conn.getInputStream().readAllBytes(), StandardCharsets.UTF_8).trim();
+    }
+
+    private byte[] toPngBytes(BufferedImage image) throws IOException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        ImageIO.write(image, "png", out);
+        return out.toByteArray();
     }
 
     // TwitterのURLを構築して開く
