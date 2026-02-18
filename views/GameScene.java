@@ -159,13 +159,4 @@ public class GameScene extends JPanel {
                 throw new AssertionError();
         }
     }
-
-    public String getList(ArrayList<CardView> a){//リスト内の文字列を全て繋げて返す。抹消予定。整列含め絶対Model上のCardInfoでやったほうがいい。
-        String rets = "";
-        for(int i=0; i < a.size(); i++){
-            String s = a.get(i).info.getWord();
-            rets += s;
-        }
-        return rets;
-    }
 }

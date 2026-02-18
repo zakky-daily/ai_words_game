@@ -8,12 +8,4 @@ public class CardInfo{
         this.word = word;
         this.lastp = new Point(x, y); 
     }
-
-    public String getWord(){
-        return this.word;
-    }
-
-    public Integer getx(){
-        return this.lastp.x;
-    }
 }

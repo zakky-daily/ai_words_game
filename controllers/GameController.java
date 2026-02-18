@@ -21,15 +21,13 @@ import views.CardView;
 import views.GameScene;
 import views.MainFrame;
 
-//!!!Modelの関数がないうちは文章反映できません!!!
-
 public class GameController extends MouseAdapter implements ActionListener{
     private MainController mainCtrl;
     private GameScene view;
-    private MainFrame mainFrame;//viewやmodelなどの関数呼び出し用
-    private Point clickPoint; //mousePresed時の座標記憶先
+    private MainFrame mainFrame;        //viewやmodelなどの関数呼び出し用
+    private Point clickPoint;           //mousePresed時の座標記憶先
     private Timer gameTimer;
-    private int remainingTime = 60;//制限時間は60秒
+    private int remainingTime = 60;     //制限時間は60秒
     private final GameModel model;
     private final int themeId;
     private final String themeKey;
@@ -44,8 +42,8 @@ public class GameController extends MouseAdapter implements ActionListener{
         this.themeKey = model.getThemeKey(themeId);
         view.setTheme(this.themeKey);
         ArrayList<String> cards = model.buildCardSet(themeKey);
-        view.GenerateCards(cards, this);//thisがMouseAdapter
-        view.addSubmitListener(this);//提出ボタンにListenerを付与
+        view.GenerateCards(cards, this);    //thisがMouseAdapter
+        view.addSubmitListener(this);       //提出ボタンにListenerを付与
         startTimer();
     }
     

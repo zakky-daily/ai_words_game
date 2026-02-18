@@ -50,8 +50,9 @@ public class JudgeController{
             default:
                 themeText = "???";
         }
+
+        // Geminiにリクエスト(非同期)
         new Thread(() -> {
-            // ここはバックグラウンドスレッド（画面をフリーズさせない）
             String prompt = String.format(
                 "# 指示\n" +
                 "ロールプレイをします。他プレイヤーが作成した心打たれる文章をジャッチするのが、あなたの役目です。\n" +
@@ -87,23 +88,20 @@ public class JudgeController{
             );
             var response = mainCtrl.connectGemini.connect(prompt);
 
-            // 3. 通信が終わったら、画面更新処理をEDTに依頼する
             SwingUtilities.invokeLater(() -> {
-                // ここは再びEDT（安全に画面を更新できる）
                 if (response != null) {
                     view.updateLabel(1, "" + response.get("score"));
                     view.updateLabel(2, "" + response.get("message"));
                 } else {
-                    // エラーハンドリング（API接続失敗時など）
                     view.updateLabel(2, "通信エラーが発生しました。");
                 }
                 view.showXButton();
                 captureJudgeScene();
             });
-
         }).start();
     }
 
+    // スクショ撮影
     private void captureJudgeScene() {
         BufferedImage image = new BufferedImage(view.getWidth(), view.getHeight(), BufferedImage.TYPE_INT_ARGB);
         Graphics g = image.getGraphics();
@@ -116,6 +114,7 @@ public class JudgeController{
         }
     }
 
+    // Twitter共有機能
     private void shareOnTwitter(String themeKey, String createdText) {
         SwingUtilities.invokeLater(() -> view.showLoading());
         new Thread(() -> {
@@ -134,6 +133,7 @@ public class JudgeController{
         }).start();
     }
 
+    // ゲーム画面と結果画面を結合
     private File buildMergedImage() throws IOException {
         BufferedImage left = ImageIO.read(new File("res/game_scene.png"));
         BufferedImage right = ImageIO.read(new File("res/judge_scene.png"));
@@ -149,6 +149,7 @@ public class JudgeController{
         return out;
     }
 
+    // Catboxに画像アップロード
     private String uploadToCatbox(File file, String contentType) throws IOException {
         String boundary = "----CodexBoundary" + System.currentTimeMillis();
         HttpURLConnection conn = (HttpURLConnection) new URL("https://catbox.moe/user/api.php").openConnection();
@@ -180,6 +181,7 @@ public class JudgeController{
         return new String(conn.getInputStream().readAllBytes(), StandardCharsets.UTF_8).trim();
     }
 
+    // TwitterのURLを構築して開く
     private void openTweetComposerWithUrl(String urlToShare, String themeKey, String createdText) throws IOException {
         if (!Desktop.isDesktopSupported()) {
             return;

@@ -7,15 +7,12 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
-import lib.CardInfo;
 
 public class GameModel {
     public static final int CARD_WIDTH = 80;
@@ -72,55 +69,6 @@ public class GameModel {
         return result;
     }
 
-    public String buildSentence(List<CardInfo> cards) {
-        List<CardInfo> sorted = sortByX(cards);
-        StringBuilder sb = new StringBuilder();
-        for (CardInfo c : sorted) {
-            if (c.word != null) {
-                sb.append(c.word);
-            }
-        }
-        return sb.toString();
-    }
-
-    public ArrayList<String> applyOverlapByPosition(List<CardInfo> cards, int cardWidth) {
-        // Trims the right side of each word based on overlap with the next card.
-        List<CardInfo> sorted = sortByX(cards);
-        ArrayList<String> trimmed = new ArrayList<>(sorted.size());
-        for (int i = 0; i < sorted.size(); i++) {
-            CardInfo current = sorted.get(i);
-            String word = current.word != null ? current.word : "";
-            int trimChars = 0;
-            if (i + 1 < sorted.size()) {
-                CardInfo next = sorted.get(i + 1);
-                int currentX = current.lastp != null ? current.lastp.x : 0;
-                int nextX = next.lastp != null ? next.lastp.x : 0;
-                int overlapPx = (currentX + cardWidth) - nextX;
-                if (overlapPx > 0 && cardWidth > 0) {
-                    double ratio = Math.min(1.0, overlapPx / (double) cardWidth);
-                    trimChars = (int) Math.round(word.length() * ratio);
-                }
-            }
-            if (trimChars >= word.length()) {
-                trimmed.add("");
-            } else if (trimChars > 0) {
-                trimmed.add(word.substring(0, word.length() - trimChars));
-            } else {
-                trimmed.add(word);
-            }
-        }
-        return trimmed;
-    }
-
-    public String buildSentenceWithOverlap(List<CardInfo> cards, int cardWidth) {
-        ArrayList<String> words = applyOverlapByPosition(cards, cardWidth);
-        StringBuilder sb = new StringBuilder();
-        for (String word : words) {
-            sb.append(word);
-        }
-        return sb.toString();
-    }
-
     private ArrayList<String> getCards(String themeKey, String suffix, int count, boolean shuffle) {
         if (themeKey == null) {
             return new ArrayList<>();
@@ -160,17 +108,4 @@ public class GameModel {
         }
     }
 
-    private List<CardInfo> sortByX(List<CardInfo> cards) {
-        ArrayList<CardInfo> sorted = new ArrayList<>();
-        if (cards == null) {
-            return sorted;
-        }
-        for (CardInfo c : cards) {
-            if (c != null) {
-                sorted.add(c);
-            }
-        }
-        sorted.sort(Comparator.comparingInt(c -> c.lastp != null ? c.lastp.x : 0));
-        return sorted;
-    }
 }

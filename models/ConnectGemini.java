@@ -15,8 +15,11 @@ import com.google.gson.JsonParser;
 
 public class ConnectGemini {
     private String key=System.getenv("GEMINI_API_KEY");
+
     public Map<String, Object> connect(String prompt) {
+
         HttpClient client = HttpClient.newHttpClient();
+
         String body = String.format("{\n" +
             "  \"contents\": [{\n" +
             "    \"parts\": [{ \"text\": \"%s\" }]\n" +
@@ -34,6 +37,7 @@ public class ConnectGemini {
             "    }\n" +
             "  }\n" +
             "}\n", prompt);
+
         HttpRequest request = HttpRequest.newBuilder()
             .uri(URI.create("https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent"))
             .header("x-goog-api-key", key)
@@ -50,6 +54,8 @@ public class ConnectGemini {
             return null;
         }
     }
+
+    // レスポンスはJson形式のString. これをmapに変換する
 
     public Map<String, Object> parseJson(String json) {
         JsonObject root = JsonParser.parseString(json).getAsJsonObject();
